@@ -1,16 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import replace from "@rollup/plugin-replace";
 // https://vitejs.dev/config/
 
-console.log(process.env.MSW === "true");
+// console.log(process.env.MOCK === "true");
 
 export default defineConfig({
-  plugins: [
-    react(),
-    replace({
-      "mock/browser": () =>
-        process.env.MSW === "true" ? "mock/browser" : "_empty",
-    }),
-  ],
+  plugins: [react(), removeMock()],
 });
+
+// 根据环境变量控制 mock-service-worker 代码
+function removeMock() {
+  return {
+    name: "remove-mock",
+    resolveId(id) {
+      if (id.includes("mock/browser")) {
+        return id;
+      }
+    },
+    load(id) {
+      if (id.includes("mock/browser") && process.env.MOCK !== "true") {
+        return `export default {}`;
+      }
+    },
+  };
+}

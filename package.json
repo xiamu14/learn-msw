@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "dev:mock": "MSW=true vite",
+    "dev:mock": "MOCK=true vite",
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
